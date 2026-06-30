@@ -1,6 +1,7 @@
 import { Autocomplete, Box, Button, Card, CardContent, IconButton, Stack, TextField, Typography } from "@mui/material"
 import { DataGrid, type GridColDef, type GridRowsProp } from '@mui/x-data-grid';
-import { useState } from "react";
+import { useData } from "../shared/DataContext";
+import { Link } from "react-router-dom";
 
 type Captain = {
   id: string;
@@ -18,7 +19,6 @@ type Player = {
   heroes: string[];
   mainRole: string;
   secondaryRoles: string;
-  otherRoles: string[];
   funFact: string;
   rank: string;
 };
@@ -43,15 +43,14 @@ const Ranks = ["Bronze", "Silver", "Gold", "Platinum", "Diamond 5", "Diamond 4",
 
 export const Create = () =>
 {
-    const [captains, setCaptains] = useState<Captain[]>([]);
-    const [players, setPlayers] = useState<Player[]>([]);
+    const {captains, setCaptains, players, setPlayers} = useData();
 
     const handleDeleteCaptain = (id: string) => {
-        setCaptains(prev => prev.filter(c => c.id !== id));
+        setCaptains((prev: any[]) => prev.filter((c: { id: string; }) => c.id !== id));
     };
 
     const handleDeletePlayer = (id: string) => {
-        setPlayers(prev => prev.filter(c => c.id !== id));
+        setPlayers((prev: any[]) => prev.filter((c: { id: string; }) => c.id !== id));
     };
 
     const captainRows: GridRowsProp = captains;
@@ -212,21 +211,23 @@ export const Create = () =>
     };
 
     const handleProcessRowUpdatePlayer = (newRow: Player) => {
-    setPlayers((prev) =>
-        prev.map((row) => (row.id === newRow.id ? newRow : row))
-    );
-    return newRow;
+        setPlayers((prev) =>
+            prev.map((row) => (row.id === newRow.id ? newRow : row))
+        );
+        console.log(players);
+        return newRow;
     };
 
 
     return (
         <Box sx={{display:"flex", flexDirection:"row", maxWidth:"100%", justifyContent:"space-around", gap:2, height:"100%", m:5}}>
+            <Button component={Link} to={"/draft"}>to draft</Button>
             {/* Adding Captains */}
             <Card sx={{width:"30%", p:2, background:"#90e57199"}}>
                 <Typography variant="h6">Captains ({captains.length})</Typography>
                 <Button
                     onClick={() =>
-                        setCaptains((prev) => [
+                        setCaptains((prev: any) => [
                         ...prev,
                         {
                             id: crypto.randomUUID(),
@@ -248,7 +249,7 @@ export const Create = () =>
                 <Typography variant="h6">Players ({players.length})</Typography>
                  <Button
                     onClick={() =>
-                        setPlayers((prev) => [
+                        setPlayers((prev: any) => [
                         ...prev,
                         {
                             id: crypto.randomUUID(),
@@ -258,7 +259,6 @@ export const Create = () =>
                             heroes: [],
                             mainRole: "Flex",
                             secondaryRoles: "None",
-                            otherRoles: [],
                             funFact: "Fun Fact",
                             rank: "Bronze",
                         },])}>

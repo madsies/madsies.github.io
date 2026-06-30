@@ -1,34 +1,70 @@
-import { Avatar } from "@mui/material";
+import { Avatar, Box } from "@mui/material";
 
-
-interface PlayerRoleProps
-{
-    role: string;
+interface PlayerRoleProps {
+  role: string;
+  secondary?: string;
 }
 
-export const PlayerRole = ({role}:PlayerRoleProps) =>
-{
-    if (typeof role !== "string") return null;
+const getRoleImage = (role: string) => `/roles/${role}.webp`;
 
-    const width = 50;
-    const height = 50;
+export const PlayerRole = ({ role, secondary }: PlayerRoleProps) => {
+  if (typeof role !== "string") return null;
 
-    var roleLower = role.toLowerCase();
+  const width = 50;
+  const height = 50;
 
-    if (roleLower == "damage")
-    {
-        return <Avatar variant="square" src="roles/Damage.webp" sx={{width:width, height:height}} />;
-    }
-    if (roleLower == "tank")
-    {
-        return <Avatar variant="square" src="roles/Tank.webp" sx={{width:width, height:height}} />;
-    }
-    if (roleLower == "support")
-    {
-        return <Avatar variant="square" src="roles/Support.webp" sx={{width:width, height:height}} />;
-    }
-    else
-    {
-        return <Avatar variant="square" src="roles/flex.svg" sx={{width:width, height:height}} />;
-    }
-}
+  const remainingRoles = ["Damage", "Tank", "Support"].filter(
+    (r) => r.toLowerCase() !== role.toLowerCase()
+  );
+
+  return (
+    <Box sx={{ position: "relative", width: 50, height: 50 }}>
+      <Avatar
+        variant="square"
+        src={getRoleImage(role)}
+        sx={{ width, height }}
+      />
+
+      {/* One secondary role */}
+      {(secondary && secondary != "None") &&
+        secondary.toLowerCase() !== "both" && (
+          <Avatar
+            variant="square"
+            src={getRoleImage(secondary)}
+            sx={{
+              position: "absolute",
+              width: width / 2,
+              height: height / 2,
+              top: 0,
+              left: width/1.5,
+            }}
+          />
+        )}
+
+      {/* Both remaining roles */}
+      {secondary?.toLowerCase() === "both" && (
+        <>
+          <Avatar
+            variant="square"
+            src={getRoleImage(remainingRoles[0])}
+            sx={{
+              position: "absolute",
+              width: width / 2, height: height / 2,top: 0, left: width/1.5,
+            }}
+          />
+          <Avatar
+            variant="square"
+            src={getRoleImage(remainingRoles[1])}
+            sx={{
+              position: "absolute",
+              width: width / 2,
+              height: height / 2,
+              top: height / 2,
+              left: width/1.5,
+            }}
+          />
+        </>
+      )}
+    </Box>
+  );
+};

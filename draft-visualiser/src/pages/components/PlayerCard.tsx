@@ -10,12 +10,13 @@ interface PlayerCardProps
     pictureUrl: string;
     team: string;
     role: string;
+    secondary: string;
     heroes: string[];
     rank: string;
     fact: string;
 }
 
-export const PlayerCard = ({name, pictureUrl, team, role, heroes, rank, fact}:PlayerCardProps) =>
+export const PlayerCard = ({name, pictureUrl, team, role, secondary, heroes, rank, fact}:PlayerCardProps) =>
 {
     return (
         <Card  sx={{py:2, px:1.5, m:2, alignItems:"center", width:"240px", cornerShape: "scoop", borderRadius:"25px",
@@ -26,7 +27,7 @@ export const PlayerCard = ({name, pictureUrl, team, role, heroes, rank, fact}:Pl
                     <Avatar variant="rounded" sx={{width:125, height:125}} src={pictureUrl}></Avatar>
                     <Box sx={{pl:2, display:"flex", flexDirection:"column", gap:2, justifyContent:"center"}}>   
                         <RankIcon rank={rank}/>
-                        <PlayerRole role={role}/>
+                        <PlayerRole role={role} secondary={secondary}/>
                     </Box>
                 </Box>
             </Box>
