@@ -17,6 +17,7 @@ type Player = {
   team: string;
   heroes: string[];
   mainRole: string;
+  secondaryRoles: string;
   otherRoles: string[];
   funFact: string;
   rank: string;
@@ -24,12 +25,16 @@ type Player = {
 
 const Heroes = [
     "D.Va", "Domina", "Doomfist","Hazard","Junker Queen","Mauga","Orisa","Ramattra","Reinhardt","Roadhog","Sigma","Winston","Wrecking Ball","Zarya",
-    "Ashe", "Anran", "Bastion", "Cassidy", "Echo", "Emre", "Freja", "Genji", "Hanzo", "Junkrat", "Mei", "Pharah", "Reaper", "Sierra", "Sojourn", "Soldier: 76", "Sombra", "Symmetra", "Torbjörn", "Tracer", "Vendetta", "Venture",  "Widowmaker", "Shion",
+    "Ashe", "Anran", "Bastion", "Cassidy", "Echo", "Emre", "Freja", "Genji", "Hanzo", "Junkrat", "Mei", "Pharah", "Reaper", "Sierra", "Sojourn", "Soldier 76", "Sombra", "Symmetra", "Torbjorn", "Tracer", "Vendetta", "Venture",  "Widowmaker", "Shion",
     "Ana", "Baptiste", "Brigitte", "Illari", "Kiriko", "Lifeweaver", "Lúcio", "Jetpack Cat", "Juno", "Mercy", "Mizuki", "Moira", "Zenyatta"
 ]
 
 const Roles = [
     "Damage", "Tank", "Support", "Flex"
+]
+
+const SecondaryRoles = [
+    "None", "Both", "Damage", "Tank", "Support"
 ]
 
 const Ranks = ["Bronze", "Silver", "Gold", "Platinum", "Diamond 5", "Diamond 4", "Diamond 3", "Diamond 2", "Diamond 1", 
@@ -104,7 +109,7 @@ export const Create = () =>
         {
             field: "name",
             headerName: "Name",
-            flex: 1,
+            flex: 2,
             editable: true,
         },
         {
@@ -117,7 +122,7 @@ export const Create = () =>
         {
             field: "team",
             headerName: "Team",
-            flex: 1,
+            flex: 2,
             editable: true,
             type: "singleSelect",
             valueOptions: ["DoughNotts", "CocoNotts", "HazelNotts", "PeaNotts", "No Team"]
@@ -125,7 +130,7 @@ export const Create = () =>
         {
             field: "heroes",
             headerName:"Heroes",
-            flex:2,
+            flex:3,
             editable: true,
             renderEditCell: (params) => {
                 const value = Array.isArray(params.value) ? params.value : [];
@@ -154,22 +159,30 @@ export const Create = () =>
             field: "rank",
             headerName: "Rank",
             type: "singleSelect",
-            flex: 1,
+            flex: 2,
             editable: true,
             valueOptions: Ranks
         },
         {
             field:"mainRole",
             headerName:"Main Role",
-            flex:0,
+            flex:2,
             editable:true,
             type:"singleSelect",
             valueOptions:Roles
         },
         {
+            field:"secondaryRoles",
+            headerName:"Secondary Role(s)",
+            flex:2,
+            editable:true,
+            type:"singleSelect",
+            valueOptions:SecondaryRoles
+        },
+        {
             field:"funFact",
             headerName:"Fun Fact",
-            flex:2, 
+            flex:1, 
             editable:true,
             type:"string",
         },
@@ -244,6 +257,7 @@ export const Create = () =>
                             team: "PeaNotts",
                             heroes: [],
                             mainRole: "Flex",
+                            secondaryRoles: "None",
                             otherRoles: [],
                             funFact: "Fun Fact",
                             rank: "Bronze",

@@ -23,7 +23,7 @@ export const Layout = ({ children }: { children?: React.ReactNode }) => {
         sx={{
           flex: 1,
           width: "100%",
-          maxWidth: "1600px",
+          maxWidth: "1750px",
           mx: "auto",
           overflowY: "auto",
         }}

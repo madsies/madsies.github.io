@@ -1,6 +1,7 @@
-import { Avatar, Box, Card, Typography } from "@mui/material";
+import { Avatar, Box, Card, Divider, Typography } from "@mui/material";
 import { RankIcon } from "./RankIcon";
 import { PlayerRole } from "./PlayerRole";
+import { PlayerHero } from "./PlayerHero";
 
 
 interface PlayerCardProps 
@@ -11,26 +12,36 @@ interface PlayerCardProps
     role: string;
     heroes: string[];
     rank: string;
+    fact: string;
 }
 
-export const PlayerCard = ({name, pictureUrl, team, role, heroes, rank}:PlayerCardProps) =>
+export const PlayerCard = ({name, pictureUrl, team, role, heroes, rank, fact}:PlayerCardProps) =>
 {
     return (
-        <Card color={"primary"} sx={{p:2, m:2, width:"fit-content", alignItems:"center"}}>
-            <Box sx={{display:"flex", flexDirection:"column", alignItems:"center"}}>
+        <Card  sx={{py:2, px:1.5, m:2, alignItems:"center", width:"240px", cornerShape: "scoop", borderRadius:"25px",
+        background:"linear-gradient(180deg,rgba(33, 143, 254, 1) 20%, rgba(150, 155, 135, 1) 60%, rgba(249, 158, 26, 1) 100%);"}}>
+            <Box sx={{display:"flex", flexDirection:"column", alignItems:"center", gap:1}}>
                 <Typography variant="h5" fontWeight={"bold"}>{name}</Typography>
                 <Box sx={{display:"flex"}}>
-                    <Avatar variant="square" sx={{width:125, height:125}} src={pictureUrl}></Avatar>
-                    <Box sx={{pl:1.5, display:"flex", flexDirection:"column", gap:2, justifyContent:"center"}}>   
+                    <Avatar variant="rounded" sx={{width:125, height:125}} src={pictureUrl}></Avatar>
+                    <Box sx={{pl:2, display:"flex", flexDirection:"column", gap:2, justifyContent:"center"}}>   
                         <RankIcon rank={rank}/>
                         <PlayerRole role={role}/>
                     </Box>
                 </Box>
             </Box>
             <Typography variant="subtitle1" fontWeight={"bold"} textAlign={"center"}>{team}</Typography>
-            <Box sx={{display:"flex"}}>
-
+            <Divider/>
+            <Box sx={{display:"flex", justifyContent:"space-between", m:1}}>
+                {heroes.map((hero) =>
+                (
+                    <PlayerHero hero={hero}/>
+                ))}
             </Box>
+            <Divider/>
+            <Typography variant="subtitle2" textAlign={"center"} paddingTop={1} paddingX={1}>
+                {fact}
+            </Typography>
             
         </Card>
     )
