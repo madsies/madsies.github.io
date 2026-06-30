@@ -11,7 +11,7 @@ export const Layout = ({ children }: { children?: React.ReactNode }) => {
         flexDirection: "column",
         overflowX: "hidden",
         background: "url(ow_thumbnail.webp)",
-        backgroundSize: "cover",
+        backgroundSize: "cover",  backgroundPosition: "center", backgroundRepeat: "no-repeat",  backgroundAttachment: "fixed",position:"relative",
 
       }}
     >

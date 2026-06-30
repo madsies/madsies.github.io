@@ -1,4 +1,4 @@
-import { Autocomplete, Box, Button, Card, CardContent, Stack, TextField, Typography } from "@mui/material"
+import { Autocomplete, Box, Button, Card, CardContent, IconButton, Stack, TextField, Typography } from "@mui/material"
 import { DataGrid, type GridColDef, type GridRowsProp } from '@mui/x-data-grid';
 import { useState } from "react";
 
@@ -32,16 +32,29 @@ const Roles = [
     "Damage", "Tank", "Support", "Flex"
 ]
 
+const Ranks = ["Bronze", "Silver", "Gold", "Platinum", "Diamond 5", "Diamond 4", "Diamond 3", "Diamond 2", "Diamond 1", 
+            "Master 5", "Master 4", "Master 3", "Master 2", "Master 1", "GrandMaster 5", "GrandMaster 4", "GrandMaster 3", "GrandMaster 2", "GrandMaster 1",
+            "Champion 5", "Champion 4", "Champion 3", "Champion 2", "Champion 1"];
+
 export const Create = () =>
 {
     const [captains, setCaptains] = useState<Captain[]>([]);
     const [players, setPlayers] = useState<Player[]>([]);
+
+    const handleDeleteCaptain = (id: string) => {
+        setCaptains(prev => prev.filter(c => c.id !== id));
+    };
+
+    const handleDeletePlayer = (id: string) => {
+        setPlayers(prev => prev.filter(c => c.id !== id));
+    };
 
     const captainRows: GridRowsProp = captains;
     const captainColumns: GridColDef[] = [
     {
         field: "name",
         headerName: "Name",
+
         flex: 1,
         editable: true,
     },
@@ -58,9 +71,7 @@ export const Create = () =>
         type: "singleSelect",
         flex: 1,
         editable: true,
-        valueOptions: ["Bronze", "Silver", "Gold", "Platinum", "Diamond 5", "Diamond 4", "Diamond 3", "Diamond 2", "Diamond 1", 
-            "Master 5", "Master 4", "Master 3", "Master 2", "Master 1", "GrandMaster 5", "GrandMaster 4", "GrandMaster 3", "GrandMaster 2", "GrandMaster 1",
-            "Champion 5", "Champion 4", "Champion 3", "Champion 2", "Champion 1"]
+        valueOptions: Ranks
     },
     {
         field: "team",
@@ -70,6 +81,21 @@ export const Create = () =>
         type: "singleSelect",
         valueOptions: ["DoughNotts", "CocoNotts", "HazelNotts", "PeaNotts", "No Team"]
     },
+    {
+        field: "actions",
+        headerName: "",
+        width:20,
+        sortable: false,
+        filterable: false,
+        renderCell: (params, ) => {
+            return (
+            <IconButton
+                onClick={() => handleDeleteCaptain(params.row.id)}>
+                X
+            </IconButton>
+            );
+        },
+    }
     ];
 
     const playerRows: GridRowsProp = players;
@@ -99,14 +125,16 @@ export const Create = () =>
         {
             field: "heroes",
             headerName:"Heroes",
-            flex:1,
+            flex:2,
             editable: true,
             renderEditCell: (params) => {
+                const value = Array.isArray(params.value) ? params.value : [];
+
                 return (
                     <Autocomplete
                     multiple
                     options={Heroes}
-                    value={Array.isArray(params.value) ? params.value : []}
+                    value={value}
                     onChange={(_, newValue) => {
                         params.api.setEditCellValue({
                         id: params.id,
@@ -120,12 +148,20 @@ export const Create = () =>
                     sx={{ width: "100%" }}
                     />
                 );
-            }
+                }
+        },
+        {
+            field: "rank",
+            headerName: "Rank",
+            type: "singleSelect",
+            flex: 1,
+            editable: true,
+            valueOptions: Ranks
         },
         {
             field:"mainRole",
             headerName:"Main Role",
-            flex:1,
+            flex:0,
             editable:true,
             type:"singleSelect",
             valueOptions:Roles
@@ -133,10 +169,25 @@ export const Create = () =>
         {
             field:"funFact",
             headerName:"Fun Fact",
-            flex:1, 
+            flex:2, 
             editable:true,
             type:"string",
-        }
+        },
+        {
+        field: "actions",
+        headerName: "",
+        width:20,
+        sortable: false,
+        filterable: false,
+        renderCell: (params, ) => {
+            return (
+            <IconButton
+                onClick={() => handleDeletePlayer(params.row.id)}>
+                X
+            </IconButton>
+            );
+        },
+    }
 
     ]
 
@@ -147,11 +198,18 @@ export const Create = () =>
     return newRow;
     };
 
+    const handleProcessRowUpdatePlayer = (newRow: Player) => {
+    setPlayers((prev) =>
+        prev.map((row) => (row.id === newRow.id ? newRow : row))
+    );
+    return newRow;
+    };
+
 
     return (
         <Box sx={{display:"flex", flexDirection:"row", maxWidth:"100%", justifyContent:"space-around", gap:2, height:"100%", m:5}}>
             {/* Adding Captains */}
-            <Card sx={{width:"35%", p:2, background:"#90e57199"}}>
+            <Card sx={{width:"30%", p:2, background:"#90e57199"}}>
                 <Typography variant="h6">Captains ({captains.length})</Typography>
                 <Button
                     onClick={() =>
@@ -166,16 +224,14 @@ export const Create = () =>
                         },])}>
                     Add Captain
                 </Button>
-                <div style={{ height: 400, width: "100%" }}>
                 <DataGrid
                     rows={captains}
                     columns={captainColumns}
                     processRowUpdate={handleProcessRowUpdate}/>
-                </div>
         </Card>
 
             {/* Adding Players */}
-            <Card sx={{width:"55%", background:"#fe93bc99", p:2 }}>
+            <Card sx={{width:"65%", background:"#fe93bc99", p:2 }}>
                 <Typography variant="h6">Players ({players.length})</Typography>
                  <Button
                     onClick={() =>
@@ -194,7 +250,7 @@ export const Create = () =>
                         },])}>
                     Add Player
                 </Button>
-                <DataGrid rows={players} columns={playerColumns}></DataGrid>
+                <DataGrid rows={players} columns={playerColumns} processRowUpdate={handleProcessRowUpdatePlayer}/>
             </Card>
         </Box>
     )
