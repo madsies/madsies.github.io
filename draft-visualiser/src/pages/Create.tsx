@@ -1,5 +1,5 @@
-import { Autocomplete, Box, Button, Card, CardContent, IconButton, Stack, TextField, Typography } from "@mui/material"
-import { DataGrid, type GridColDef, type GridRowsProp } from '@mui/x-data-grid';
+import { Autocomplete, Box, Button, Card,  IconButton, TextField, Typography } from "@mui/material"
+import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useData } from "../shared/DataContext";
 import { Link } from "react-router-dom";
 
@@ -53,7 +53,6 @@ export const Create = () =>
         setPlayers((prev: any[]) => prev.filter((c: { id: string; }) => c.id !== id));
     };
 
-    const captainRows: GridRowsProp = captains;
     const captainColumns: GridColDef[] = [
     {
         field: "name",
@@ -102,7 +101,6 @@ export const Create = () =>
     }
     ];
 
-    const playerRows: GridRowsProp = players;
     const playerColumns: GridColDef[] = 
     [
         {
