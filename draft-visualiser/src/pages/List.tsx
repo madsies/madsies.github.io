@@ -47,7 +47,7 @@ export const List = () =>
             const blob = await res.blob();
 
             zip.file(`player-${player.name}.png`, blob);
-            }catch (err) {
+            } catch (err) {
                 console.error("Failed exporting", player.name, err);
             }
         }
