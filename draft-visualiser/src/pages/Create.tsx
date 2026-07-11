@@ -123,7 +123,7 @@ export const Create = () =>
             flex: 2,
             editable: true,
             type: "singleSelect",
-            valueOptions: ["DoughNotts", "CocoNotts", "HazelNotts", "PeaNotts", "No Team"]
+            valueOptions: ["DoughNotts", "CocoNotts", "HazelNotts", "PeaNotts", "Dream Eaters", "No Team"]
         },
         {
             field: "heroes",

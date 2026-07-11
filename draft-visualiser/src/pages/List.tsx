@@ -30,8 +30,6 @@ export const List = () =>
         for (const player of players) {
             try
             {
-
-            
             const node = cardRefs.current[player.name];
             if (!node) continue;
 
