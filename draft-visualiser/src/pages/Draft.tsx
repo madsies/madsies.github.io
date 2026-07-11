@@ -34,6 +34,7 @@ export const Draft = () => {
     const [activeAuction, setActiveAuction] = useState<boolean>(false);
     const [auctionPlayer, setAuctionPlayer] = useState<DraftPlayer>();
     const [auctionRound, setAuctionRound] = useState(1);
+    const [currentPickIndex, setCurrentPickIndex] = useState(0);
     
     const [bidAmount, setBidAmount] = useState<number>(0);
 
@@ -79,8 +80,8 @@ export const Draft = () => {
 
         const actualCost = bidAmount * 1000;
 
-        setTeams(prevTeams => 
-            prevTeams.map(team => {
+        setTeams(prevTeams => {
+            const updatedTeams = prevTeams.map(team => {
                 if (team.captain === captainName) {
                     return {
                         ...team,
@@ -89,17 +90,36 @@ export const Draft = () => {
                     };
                 }
                 return team;
-            })
-        );
+            });
 
+            // Find next team that isn't full
+            let next = (currentPickIndex + 1) % updatedTeams.length;
+
+            while (
+                updatedTeams[next].players.length >= TEAM_SIZE &&
+                next !== currentPickIndex
+            ) {
+                next = (next + 1) % updatedTeams.length;
+            }
+
+            setCurrentPickIndex(next);
+
+            return updatedTeams;
+        });
+
+        
         setAuctionRound(prev => prev + 1);
         setBidAmount(0);
         setAuctionPlayer(undefined);
         setActiveAuction(false);
     };
 
-    const currentPickIndex = teams.length > 0 ? (auctionRound - 1) % teams.length : 0;
-    const currentCaptainPicking = teams.length > 0 ? teams[currentPickIndex].captain : "Loading...";
+    const TEAM_SIZE = 5; // Not Counting captain
+
+    const currentCaptainPicking =
+    currentPickIndex >= 0 && teams[currentPickIndex]
+        ? teams[currentPickIndex].captain
+        : "Draft Complete";
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
@@ -139,7 +159,7 @@ export const Draft = () => {
                                     £{team.budget.toLocaleString()}
                                 </Typography>
                             </Box>
-                            
+                                <Typography variant="subtitle2" color="text.secondary" lineHeight={1} padding={0} fontWeight={"bold"}>Players ({team.players.length}/{TEAM_SIZE})</Typography>
                             {team.players.map((player) => (
                                 <Typography variant="subtitle2" color="text.secondary" lineHeight={1} padding={0}>
                                     {player.name} <span style={{color:yellow[600], fontWeight:700}}>£{player.cost}</span>
@@ -190,7 +210,7 @@ export const Draft = () => {
                                     {teams.map((team, i) => (
                                         <Button
                                             key={i}
-                                            disabled={team.players.length >= 6 || team.budget < (bidAmount * 1000)}
+                                            disabled={team.players.length >= TEAM_SIZE || team.budget < (bidAmount * 1000)}
                                             variant="contained"
                                             color="secondary"
                                             onClick={() => handleBuyPlayer(team.captain)}

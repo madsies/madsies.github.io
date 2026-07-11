@@ -36,7 +36,7 @@ export const PlayerCard = ({name, pictureUrl, team, role, secondary, heroes, ran
                     </Box>
                 </Box>
             </Box>
-            <Typography variant="subtitle1" fontWeight={"bold"} textAlign={"center"}>{team}</Typography>
+            <Typography variant="subtitle1" fontWeight={"bold"} textAlign={"center"}>{team == "No Team" ? "‎ " : team}</Typography>
             <Divider/>
             <Box sx={{display:"flex", justifyContent:"space-between", m:1}}>
                 {heroes.map((hero) =>
