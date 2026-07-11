@@ -2,6 +2,7 @@ import { Autocomplete, Box, Button, Card,  IconButton, TextField, Typography } f
 import { DataGrid, type GridColDef } from '@mui/x-data-grid';
 import { useData } from "../shared/DataContext";
 import { Link } from "react-router-dom";
+import { useRef } from "react";
 
 type Captain = {
   id: string;
@@ -216,11 +217,87 @@ export const Create = () =>
         return newRow;
     };
 
+    const handleExportJson = () => {
+        const data = {
+            captains,
+            players,
+        };
+
+        const blob = new Blob([JSON.stringify(data, null, 2)], {
+            type: "application/json",
+        });
+
+        const url = URL.createObjectURL(blob);
+
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "draft-data.json";
+        a.click();
+
+        URL.revokeObjectURL(url);
+    };
+
+    const handleImportJson = (
+        event: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        const file = event.target.files?.[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+
+        reader.onload = (e) => {
+            try {
+                const data = JSON.parse(e.target?.result as string);
+
+                if (Array.isArray(data.captains)) {
+                    setCaptains(data.captains);
+                }
+
+                if (Array.isArray(data.players)) {
+                    setPlayers(data.players);
+                }
+            } catch {
+                alert("Invalid JSON file.");
+            }
+
+            event.target.value = "";
+        };
+
+        reader.readAsText(file);
+    };
+
+    const fileInputRef = useRef<HTMLInputElement>(null);
+
 
     return (<>
         <Box sx={{display:"flex", m:2, mx:7, gap:2}}>
             <Button component={Link} to={"/list"} variant="contained" color="secondary">View Players</Button>
             <Button component={Link} to={"/draft"} variant="contained" color="secondary">Start Draft</Button>
+
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={handleExportJson}
+                sx={{ml:"auto"}}
+            >
+                Export JSON
+            </Button>
+
+            <Button
+                variant="contained"
+                color="primary"
+                onClick={() => fileInputRef.current?.click()}
+            >
+                Import JSON
+            </Button>
+
+            <input
+                ref={fileInputRef}
+                type="file"
+                accept=".json,application/json"
+                hidden
+                onChange={handleImportJson}
+            />
         </Box>
    
         <Box sx={{display:"flex", flexDirection:"row", maxWidth:"100%", justifyContent:"space-around", gap:2, height:"100%", mx:5}}>
